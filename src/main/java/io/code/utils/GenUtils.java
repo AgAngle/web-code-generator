@@ -8,6 +8,7 @@ import io.code.entity.mongo.MongoGeneratorEntity;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.velocity.Template;
@@ -17,7 +18,12 @@ import org.apache.velocity.app.Velocity;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 代码生成器   工具类
@@ -30,28 +36,15 @@ public class GenUtils {
 
     private static String currentTableName;
 
-    public static List<String> getTemplates() {
-        List<String> templates = new ArrayList<String>();
-        templates.add("template/Entity.java.vm");
-        templates.add("template/Dao.xml.vm");
-
-        templates.add("template/menu.sql.vm");
-
-        templates.add("template/Service.java.vm");
-        templates.add("template/ServiceImpl.java.vm");
-        templates.add("template/Controller.java.vm");
-        templates.add("template/Dao.java.vm");
-
-        templates.add("template/index.vue.vm");
-        templates.add("template/add-or-update.vue.vm");
-        if (MongoManager.isMongo()) {
-            // mongo不需要mapper、sql   实体类需要替换
-            templates.remove(0);
-            templates.remove(1);
-            templates.remove(2);
-            templates.add("template/MongoEntity.java.vm");
+    public static List<Path> getTemplates() {
+        String path = "src/main/resources/template";
+        try (Stream<Path> paths = Files.walk(Paths.get(path))) {
+            return paths
+                    .filter(Files::isRegularFile)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RRException("获取模板文件失败", e);
         }
-        return templates;
     }
 
     public static List<String> getMongoChildTemplates() {
@@ -65,6 +58,46 @@ public class GenUtils {
      */
     public static void generatorCode(Map<String, String> table,
                                      List<Map<String, String>> columns) {
+        String rootPath = "src" + File.separator + "main" + File.separator + "resources";
+        String defaultDirName = "target";
+        try {
+            FileUtils.deleteDirectory(new File(rootPath + File.separator + defaultDirName));
+
+            VelocityContext context = getVelocityContext(table, columns);
+
+            //获取模板列表
+            List<Path> templates = getTemplates();
+            for (Path template : templates) {
+                String templateStr = template.toString();
+
+                String filePath = templateStr.replace("template" + File.separator, StringUtils.EMPTY).replace(".vm", StringUtils.EMPTY);
+                int divisionIndex = filePath.lastIndexOf(File.separator);
+                String dirPath = filePath.substring(0, divisionIndex);
+                String fileName = filePath.substring(divisionIndex + 1);
+                dirPath = rootPath + File.separator + defaultDirName + dirPath.replace(rootPath, StringUtils.EMPTY);
+                filePath = dirPath + File.separator + fileName;
+
+                // 创建目录
+                new File(dirPath).mkdirs();
+
+                // 创建文件
+                File file = new File(filePath);
+                file.createNewFile();
+
+                // 写入文件
+                //渲染模板
+                StringWriter sw = new StringWriter();
+                Template tpl = Velocity.getTemplate(templateStr.replace(rootPath, StringUtils.EMPTY), "UTF-8");
+                tpl.merge(context, sw);
+                Files.write(Paths.get(filePath), sw.toString().getBytes());
+
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static VelocityContext getVelocityContext(Map<String, String> table, List<Map<String, String>> columns) {
         //配置信息
         Configuration config = getConfig();
         boolean hasBigDecimal = false;
@@ -122,7 +155,7 @@ public class GenUtils {
         prop.put("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         Velocity.init(prop);
         String mainPath = config.getString("mainPath");
-        mainPath = StringUtils.isBlank(mainPath) ? "io.renren" : mainPath;
+        mainPath = StringUtils.isBlank(mainPath) ? "io.code" : mainPath;
         //封装模板数据
         Map<String, Object> map = new HashMap<>();
         map.put("tableName", tableEntity.getTableName());
@@ -140,31 +173,10 @@ public class GenUtils {
         map.put("author", config.getString("author"));
         map.put("email", config.getString("email"));
         map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
-        VelocityContext context = new VelocityContext(map);
+        return new VelocityContext(map);
+    }
 
-        //获取模板列表
-        List<String> templates = getTemplates();
-        for (String template : templates) {
-            //渲染模板
-            StringWriter sw = new StringWriter();
-            Template tpl = Velocity.getTemplate(template, "UTF-8");
-            tpl.merge(context, sw);
-
-            try {
-                String filePath = getFileName(template, tableEntity.getClassName(), config.getString("package"), config.getString("moduleName"));
-
-                File file = new File(filePath);
-                file.createNewFile();
-
-//                //添加到zip
-//                zip.putNextEntry(new ZipEntry());
-//                IOUtils.write(sw.toString(), zip, "UTF-8");
-//                IOUtils.closeQuietly(sw);
-//                zip.closeEntry();
-            } catch (IOException e) {
-                throw new RRException("渲染模板失败，表名：" + tableEntity.getTableName(), e);
-            }
-        }
+    private record Result(TableEntity tableEntity, VelocityContext context) {
     }
 
     /**
@@ -251,17 +263,7 @@ public class GenUtils {
             StringWriter sw = new StringWriter();
             Template tpl = Velocity.getTemplate(template, "UTF-8");
             tpl.merge(context, sw);
-//            try {
-//                //添加到zip
-//                zip.putNextEntry(new ZipEntry(getFileName(template, tableEntity.getClassName(), config.getString("package"), config.getString("moduleName"))));
-//                IOUtils.write(sw.toString(), zip, "UTF-8");
-//                IOUtils.closeQuietly(sw);
-//                zip.closeEntry();
-//            } catch (IOException e) {
-//                throw new RRException("渲染模板失败，表名：" + tableEntity.getTableName(), e);
-//            }
         }
-
     }
 
     /**
@@ -277,7 +279,7 @@ public class GenUtils {
     public static String tableToJava(String tableName, String[] tablePrefixArray) {
         if (null != tablePrefixArray && tablePrefixArray.length > 0) {
             for (String tablePrefix : tablePrefixArray) {
-                  if (tableName.startsWith(tablePrefix)){
+                if (tableName.startsWith(tablePrefix)) {
                     tableName = tableName.replaceFirst(tablePrefix, "");
                 }
             }
@@ -305,7 +307,7 @@ public class GenUtils {
             packagePath += packageName.replace(".", File.separator) + File.separator + moduleName + File.separator;
         }
         if (template.contains("MongoChildrenEntity.java.vm")) {
-            return packagePath + "entity" + File.separator + "inner" + File.separator + currentTableName+ File.separator + splitInnerName(className)+ "InnerEntity.java";
+            return packagePath + "entity" + File.separator + "inner" + File.separator + currentTableName + File.separator + splitInnerName(className) + "InnerEntity.java";
         }
         if (template.contains("Entity.java.vm") || template.contains("MongoEntity.java.vm")) {
             return packagePath + "entity" + File.separator + className + "Entity.java";
@@ -348,8 +350,8 @@ public class GenUtils {
         return null;
     }
 
-    private static String splitInnerName(String name){
-          name = name.replaceAll("\\.","_");
-          return name;
+    private static String splitInnerName(String name) {
+        name = name.replaceAll("\\.", "_");
+        return name;
     }
 }

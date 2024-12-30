@@ -14,7 +14,7 @@ import java.util.List;
  * @author jianxing
  */
 @SpringBootApplication(exclude = {MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
-@MapperScan("io.renren.dao")
+@MapperScan("io.code.dao")
 public class CodeGenerateApplication {
 
 	public static void main(String[] args) {

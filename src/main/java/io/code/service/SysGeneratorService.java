@@ -54,6 +54,7 @@ public class SysGeneratorService {
 
 
     public void generatorCode(List<String> tableNames) {
+
         for (String tableName : tableNames) {
             //查询表信息
             Map<String, String> table = queryTable(tableName);
