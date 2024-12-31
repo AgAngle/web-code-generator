@@ -65,6 +65,7 @@ public class GenUtils {
 
             VelocityContext context = getVelocityContext(table, columns);
 
+            String className = (String) context.get("className");
             //获取模板列表
             List<Path> templates = getTemplates();
             for (Path template : templates) {
@@ -74,6 +75,7 @@ public class GenUtils {
                 int divisionIndex = filePath.lastIndexOf(File.separator);
                 String dirPath = filePath.substring(0, divisionIndex);
                 String fileName = filePath.substring(divisionIndex + 1);
+                fileName = fileName.replace("{className}", className);
                 dirPath = rootPath + File.separator + defaultDirName + dirPath.replace(rootPath, StringUtils.EMPTY);
                 filePath = dirPath + File.separator + fileName;
 
@@ -296,58 +298,6 @@ public class GenUtils {
         } catch (ConfigurationException e) {
             throw new RRException("获取配置文件失败，", e);
         }
-    }
-
-    /**
-     * 获取文件名
-     */
-    public static String getFileName(String template, String className, String packageName, String moduleName) {
-        String packagePath = "main" + File.separator + "java" + File.separator;
-        if (StringUtils.isNotBlank(packageName)) {
-            packagePath += packageName.replace(".", File.separator) + File.separator + moduleName + File.separator;
-        }
-        if (template.contains("MongoChildrenEntity.java.vm")) {
-            return packagePath + "entity" + File.separator + "inner" + File.separator + currentTableName + File.separator + splitInnerName(className) + "InnerEntity.java";
-        }
-        if (template.contains("Entity.java.vm") || template.contains("MongoEntity.java.vm")) {
-            return packagePath + "entity" + File.separator + className + "Entity.java";
-        }
-
-        if (template.contains("Dao.java.vm")) {
-            return packagePath + "dao" + File.separator + className + "Dao.java";
-        }
-
-        if (template.contains("Service.java.vm")) {
-            return packagePath + "service" + File.separator + className + "Service.java";
-        }
-
-        if (template.contains("ServiceImpl.java.vm")) {
-            return packagePath + "service" + File.separator + "impl" + File.separator + className + "ServiceImpl.java";
-        }
-
-        if (template.contains("Controller.java.vm")) {
-            return packagePath + "controller" + File.separator + className + "Controller.java";
-        }
-
-        if (template.contains("Dao.xml.vm")) {
-            return "main" + File.separator + "resources" + File.separator + "mapper" + File.separator + moduleName + File.separator + className + "Dao.xml";
-        }
-
-        if (template.contains("menu.sql.vm")) {
-            return className.toLowerCase() + "_menu.sql";
-        }
-
-        if (template.contains("index.vue.vm")) {
-            return "main" + File.separator + "resources" + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
-                    File.separator + moduleName + File.separator + className.toLowerCase() + ".vue";
-        }
-
-        if (template.contains("add-or-update.vue.vm")) {
-            return "main" + File.separator + "resources" + File.separator + "src" + File.separator + "views" + File.separator + "modules" +
-                    File.separator + moduleName + File.separator + className.toLowerCase() + "-add-or-update.vue";
-        }
-
-        return null;
     }
 
     private static String splitInnerName(String name) {
