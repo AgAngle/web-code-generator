@@ -1,7 +1,8 @@
 **项目说明** 
 
 该项目可生成entity、xml、dao、service、html、js、sql代码，减少重复的的开发工作
-  项目参考人人代码生成器：https://gitee.com/renrenio/renren-generator
+
+项目参考人人代码生成器：https://gitee.com/renrenio/renren-generator
 
 **实现效果**
 
