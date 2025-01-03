@@ -104,6 +104,9 @@ public class GenUtils {
         Configuration config = getConfig();
         boolean hasBigDecimal = false;
         boolean hasList = false;
+        if (table == null) {
+            throw new RRException("表名不存在");
+        }
         //表信息
         TableEntity tableEntity = new TableEntity();
         tableEntity.setTableName(table.get("tableName"));
@@ -143,6 +146,11 @@ public class GenUtils {
                 tableEntity.setPk(columnEntity);
             }
 
+            if (column.get("length") != null) {
+                columnEntity.setLength(Long.valueOf(column.get("length")));
+            }
+            columnEntity.setIsNullable(column.get("isNullable"));
+
             columsList.add(columnEntity);
         }
         tableEntity.setColumns(columsList);
@@ -158,6 +166,9 @@ public class GenUtils {
         Velocity.init(prop);
         String mainPath = config.getString("mainPath");
         mainPath = StringUtils.isBlank(mainPath) ? "io.code" : mainPath;
+        String class_name = camelToSnake(tableEntity.getClassname());
+        String permissionPrefix = (config.getString("moduleName") + "_" + class_name).toUpperCase();
+
         //封装模板数据
         Map<String, Object> map = new HashMap<>();
         map.put("tableName", tableEntity.getTableName());
@@ -165,6 +176,7 @@ public class GenUtils {
         map.put("pk", tableEntity.getPk());
         map.put("className", tableEntity.getClassName());
         map.put("classname", tableEntity.getClassname());
+        map.put("class_name", class_name);
         map.put("pathName", tableEntity.getClassname().toLowerCase());
         map.put("columns", tableEntity.getColumns());
         map.put("hasBigDecimal", hasBigDecimal);
@@ -175,6 +187,7 @@ public class GenUtils {
         map.put("author", config.getString("author"));
         map.put("email", config.getString("email"));
         map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+        map.put("permissionPrefix", permissionPrefix);
         return new VelocityContext(map);
     }
 
@@ -240,6 +253,7 @@ public class GenUtils {
         Velocity.init(prop);
         String mainPath = config.getString("mainPath");
         mainPath = StringUtils.isBlank(mainPath) ? "io.renren" : mainPath;
+        String permissionPrefix = camelToSnake((config.getString("moduleName") + "_" + tableEntity.getClassname()).toUpperCase());
         //封装模板数据
         Map<String, Object> map = new HashMap<>();
         map.put("tableName", tableEntity.getTableName());
@@ -256,6 +270,7 @@ public class GenUtils {
         map.put("author", config.getString("author"));
         map.put("email", config.getString("email"));
         map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
+        map.put("permissionPrefix", permissionPrefix);
         VelocityContext context = new VelocityContext(map);
 
         //获取模板列表
@@ -266,6 +281,18 @@ public class GenUtils {
             Template tpl = Velocity.getTemplate(template, "UTF-8");
             tpl.merge(context, sw);
         }
+    }
+
+    public static String camelToSnake(String camelCase) {
+        StringBuilder result = new StringBuilder();
+        for (char c : camelCase.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                result.append('_').append(Character.toLowerCase(c));
+            } else {
+                result.append(c);
+            }
+        }
+        return result.toString();
     }
 
     /**

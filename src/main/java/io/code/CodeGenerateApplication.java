@@ -1,6 +1,8 @@
 package io.code;
 
 import io.code.service.SysGeneratorService;
+import io.code.utils.GenUtils;
+import org.apache.commons.configuration.Configuration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,8 +21,9 @@ public class CodeGenerateApplication {
 
 	public static void main(String[] args) {
 		ConfigurableApplicationContext applicationContext = SpringApplication.run(CodeGenerateApplication.class, args);
-		List<String> tableNames = List.of("user");
+		Configuration config = GenUtils.getConfig();
+		String[] tableNames = config.getStringArray("tableNames");
 		applicationContext.getBean(SysGeneratorService.class)
-				.generatorCode(tableNames);
+				.generatorCode(List.of(tableNames));
 	}
 }
