@@ -17,9 +17,12 @@ import io.code.factory.MongoDBCollectionFactory;
 import io.code.utils.GenUtils;
 import io.code.utils.PageUtils;
 import io.code.utils.Query;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +58,11 @@ public class SysGeneratorService {
 
     public void generatorCode(List<String> tableNames) {
 
+        try {
+            FileUtils.deleteDirectory(new File(GenUtils.ROOT_PATH + File.separator + GenUtils.DEFAULT_DIR_NAME));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         for (String tableName : tableNames) {
             //查询表信息
             Map<String, String> table = queryTable(tableName);

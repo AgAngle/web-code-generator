@@ -8,7 +8,6 @@ import io.code.entity.mongo.MongoGeneratorEntity;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.velocity.Template;
@@ -34,7 +33,8 @@ import java.util.stream.Stream;
  */
 public class GenUtils {
 
-    private static String currentTableName;
+    public static final String ROOT_PATH = "src" + File.separator + "main" + File.separator + "resources";
+    public static final String DEFAULT_DIR_NAME = "output";
 
     public static List<Path> getTemplates() {
         String path = "src/main/resources/template";
@@ -58,10 +58,8 @@ public class GenUtils {
      */
     public static void generatorCode(Map<String, String> table,
                                      List<Map<String, String>> columns) {
-        String rootPath = "src" + File.separator + "main" + File.separator + "resources";
-        String defaultDirName = "target";
+
         try {
-            FileUtils.deleteDirectory(new File(rootPath + File.separator + defaultDirName));
 
             VelocityContext context = getVelocityContext(table, columns);
 
@@ -76,7 +74,7 @@ public class GenUtils {
                 String dirPath = filePath.substring(0, divisionIndex);
                 String fileName = filePath.substring(divisionIndex + 1);
                 fileName = fileName.replace("{className}", className);
-                dirPath = rootPath + File.separator + defaultDirName + dirPath.replace(rootPath, StringUtils.EMPTY);
+                dirPath = ROOT_PATH + File.separator + DEFAULT_DIR_NAME + dirPath.replace(ROOT_PATH, StringUtils.EMPTY);
                 filePath = dirPath + File.separator + fileName;
 
                 // 创建目录
@@ -89,7 +87,7 @@ public class GenUtils {
                 // 写入文件
                 //渲染模板
                 StringWriter sw = new StringWriter();
-                Template tpl = Velocity.getTemplate(templateStr.replace(rootPath, StringUtils.EMPTY), "UTF-8");
+                Template tpl = Velocity.getTemplate(templateStr.replace(ROOT_PATH, StringUtils.EMPTY), "UTF-8");
                 tpl.merge(context, sw);
                 Files.write(Paths.get(filePath), sw.toString().getBytes());
 
@@ -200,7 +198,6 @@ public class GenUtils {
     public static void generatorMongoCode(List<String> tableNames) {
         for (String tableName : tableNames) {
             MongoDefinition info = MongoManager.getInfo(tableName);
-            currentTableName = tableName;
             List<MongoGeneratorEntity> childrenInfo = info.getChildrenInfo(tableName);
             childrenInfo.remove(0);
             for (MongoGeneratorEntity mongoGeneratorEntity : childrenInfo) {
