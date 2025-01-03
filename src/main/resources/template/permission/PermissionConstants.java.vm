@@ -1,0 +1,16 @@
+package io.cordys.common.constants;
+
+/**
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+public class PermissionConstants {
+
+    /*------ start: ${permissionPrefix}_ROLE ------*/
+    public static final String ${permissionPrefix}_READ = "${permissionPrefix}:READ";
+    public static final String ${permissionPrefix}_ADD = "${permissionPrefix}:ADD";
+    public static final String ${permissionPrefix}_UPDATE = "${permissionPrefix}:UPDATE";
+    public static final String ${permissionPrefix}_DELETE = "${permissionPrefix}:DELETE";
+    /*------ end: ${permissionPrefix}_ROLE ------*/
+}

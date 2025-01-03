@@ -1,0 +1,17 @@
+package ${package}.${moduleName}.mapper;
+
+import ${package}.${moduleName}.dto.request.*;
+import ${package}.${moduleName}.dto.response.*;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+public interface Ext${className}Mapper {
+
+    List<${className}ListResponse> list(@Param("request") ${className}PageRequest request);
+}

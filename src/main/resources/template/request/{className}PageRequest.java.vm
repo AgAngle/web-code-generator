@@ -1,0 +1,17 @@
+package ${package}.${moduleName}.dto.request;
+
+import lombok.Data;
+
+#if(${hasBigDecimal})
+import java.math.BigDecimal;
+#end
+
+/**
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Data
+public class ${className}PageRequest extends BasePageRequest {
+
+}

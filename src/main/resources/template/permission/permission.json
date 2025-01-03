@@ -1,0 +1,19 @@
+{
+  "id": "${permissionPrefix}",
+  "name": "permission.${moduleName}.${class_name}.name",
+  "permissions": [
+    {
+      "id": "${permissionPrefix}:READ"
+    },
+    {
+      "id": "${permissionPrefix}:READ+ADD"
+    },
+    {
+      "id": "${permissionPrefix}:READ+UPDATE"
+    },
+    {
+      "id": "${permissionPrefix}:READ+DELETE"
+    }
+  ]
+}
+

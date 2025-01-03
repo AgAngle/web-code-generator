@@ -1,0 +1,33 @@
+package ${package}.${moduleName}.dto.request;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.*;
+import lombok.Data;
+
+#if(${hasBigDecimal})
+import java.math.BigDecimal;
+#end
+
+/**
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Data
+public class ${className}UpdateRequest {
+#foreach ($column in $columns)
+
+#if(!($column.attrname.equals("createUser") || $column.attrname.equals("updateUser")
+|| $column.attrname.equals("createTime") || $column.attrname.equals("updateTime")
+|| $column.attrname.equals("organizationId") || $column.attrname.equals("internal")))
+#if($column.columnName.equals("id"))
+    @NotBlank
+#end
+#if($column.attrType.equals("String"))
+    @Max(value = $column.length)
+#end
+    @Schema(description = "$column.comments")
+    private $column.attrType $column.attrname;
+#end
+#end
+}

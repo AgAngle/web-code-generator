@@ -1,0 +1,18 @@
+package ${package}.${moduleName}.dto.response;
+
+import lombok.Data;
+import ${package}.${moduleName}.domain.${className};
+
+#if(${hasBigDecimal})
+import java.math.BigDecimal;
+#end
+
+/**
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Data
+public class ${className}ListResponse extends ${className} {
+
+}

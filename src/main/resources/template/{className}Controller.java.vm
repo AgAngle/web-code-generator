@@ -1,90 +1,67 @@
 package ${package}.${moduleName}.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import jakarta.annotation.Resource;
+import io.cordys.common.constants.PermissionConstants;
+import io.cordys.common.pager.Pager;
+import io.cordys.security.SessionUtils;
+import ${package}.${moduleName}.domain.${className};
+import ${package}.${moduleName}.dto.request.*;
+import ${package}.${moduleName}.dto.response.*;
 
-import ${package}.${moduleName}.entity.${className}Entity;
 import ${package}.${moduleName}.service.${className}Service;
-import ${mainPath}.common.utils.PageUtils;
-import ${mainPath}.common.utils.R;
-
-
+import ${mainPath}.common.pager.PageUtils;
+import java.util.List;
 
 /**
  * ${comments}
  *
  * @author ${author}
- * @email ${email}
  * @date ${datetime}
  */
 @RestController
-@RequestMapping("${moduleName}/${pathName}")
+@RequestMapping("/${pathName}")
 public class ${className}Controller {
-    @Autowired
+    @Resource
     private ${className}Service ${classname}Service;
 
-    /**
-     * 列表
-     */
-    @RequestMapping("/list")
-    @RequiresPermissions("${moduleName}:${pathName}:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = ${classname}Service.queryPage(params);
-
-        return R.ok().put("page", page);
+    @PostMapping("/page")
+    @RequiresPermissions(PermissionConstants.${permissionPrefix}_READ)
+    @Operation(summary = "${comments}列表")
+    public Pager<List<${className}ListResponse>> list(@Validated @RequestBody ${className}PageRequest request){
+        Page<Object> page = PageHelper.startPage(request.getCurrent(), request.getPageSize());
+        return PageUtils.setPageInfo(page, ${classname}Service.list(request));
     }
 
-
-    /**
-     * 信息
-     */
-    @RequestMapping("/info/{${pk.attrname}}")
-    @RequiresPermissions("${moduleName}:${pathName}:info")
-    public R info(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}){
-		${className}Entity ${classname} = ${classname}Service.getById(${pk.attrname});
-
-        return R.ok().put("${classname}", ${classname});
+    @RequestMapping("/get/{id}")
+    @RequiresPermissions(PermissionConstants.${permissionPrefix}_READ)
+    @Operation(summary = "${comments}详情")
+    public ${className}GetResponse get(@PathVariable String id){
+        return ${classname}Service.get(id);
     }
 
-    /**
-     * 保存
-     */
-    @RequestMapping("/save")
-    @RequiresPermissions("${moduleName}:${pathName}:save")
-    public R save(@RequestBody ${className}Entity ${classname}){
-		${classname}Service.save(${classname});
-
-        return R.ok();
+    @RequestMapping("/add")
+    @RequiresPermissions(PermissionConstants.${permissionPrefix}_ADD)
+    @Operation(summary = "添加${comments}")
+    public ${className} add(@Validated @RequestBody ${className}AddRequest request){
+		return ${classname}Service.add(request, SessionUtils.getUserId());
     }
 
-    /**
-     * 修改
-     */
     @RequestMapping("/update")
-    @RequiresPermissions("${moduleName}:${pathName}:update")
-    public R update(@RequestBody ${className}Entity ${classname}){
-		${classname}Service.updateById(${classname});
-
-        return R.ok();
+    @RequiresPermissions(PermissionConstants.${permissionPrefix}_UPDATE)
+    @Operation(summary = "更新${comments}")
+    public ${className} update(@Validated @RequestBody ${className}UpdateRequest request){
+        return ${classname}Service.update(request, SessionUtils.getUserId());
     }
 
-    /**
-     * 删除
-     */
-    @RequestMapping("/delete")
-    @RequiresPermissions("${moduleName}:${pathName}:delete")
-    public R delete(@RequestBody ${pk.attrType}[] ${pk.attrname}s){
-		${classname}Service.removeByIds(Arrays.asList(${pk.attrname}s));
-
-        return R.ok();
+    @GetMapping("/delete/{id}")
+    @RequiresPermissions(PermissionConstants.${permissionPrefix}_DELETE)
+    public void delete(@PathVariable String id){
+		${classname}Service.delete(id);
     }
-
 }

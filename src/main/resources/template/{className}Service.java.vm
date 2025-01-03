@@ -1,0 +1,65 @@
+package ${package}.${moduleName}.service;
+
+import io.cordys.common.util.BeanUtils;
+import io.cordys.mybatis.BaseMapper;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+
+import ${package}.${moduleName}.dto.request.*;
+import ${package}.${moduleName}.dto.response.*;
+import ${package}.${moduleName}.mapper.Ext${className}Mapper;
+import ${package}.${moduleName}.domain.${className};
+
+/**
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Service("${classname}Service")
+@Transactional(rollbackFor = Exception.class)
+public class ${className}Service {
+
+    @Resource
+    private BaseMapper<${className}> ${className}Mapper;
+
+    @Resource
+    private Ext${className}Mapper ext${className}Mapper;
+
+    public List<${className}ListResponse> list(${className}PageRequest request) {
+        List<${className}ListResponse> list = ext${className}Mapper.list(request);
+        // do something...
+        return list;
+    }
+
+
+    public ${className}GetResponse get(String id) {
+        ${className} ${classname} = ${className}Mapper.selectByPrimaryKey(id);
+        ${className}GetResponse ${classname}GetResponse = BeanUtils.copyBean(new ${className}GetResponse(), ${classname});
+        // do something...
+        return ${classname}GetResponse;
+    }
+
+    public ${className} add(${className}AddRequest request, String userId) {
+        ${className} ${classname} = BeanUtils.copyBean(new ${className}(), request);
+        ${classname}.setCreateTime(System.currentTimeMillis());
+        ${classname}.setUpdateTime(System.currentTimeMillis());
+        ${classname}.setUpdateUser(userId);
+        ${classname}.setCreateUser(userId);
+        ${className}Mapper.insert(${classname});
+        return ${classname};
+    }
+
+    public ${className} update(${className}UpdateRequest request, String userId) {
+        ${className} ${classname} = BeanUtils.copyBean(new ${className}(), request);
+        ${classname}.setUpdateTime(System.currentTimeMillis());
+        ${classname}.setUpdateUser(userId);
+        ${className}Mapper.update(${classname});
+        return ${className}Mapper.selectByPrimaryKey(${classname}.getId());
+    }
+
+    public void delete(String id) {
+        ${className}Mapper.deleteByPrimaryKey(id);
+    }
+}
