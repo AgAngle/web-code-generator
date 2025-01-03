@@ -3,6 +3,7 @@ package ${package}.${moduleName}.controller;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +20,11 @@ import ${mainPath}.common.pager.PageUtils;
 import java.util.List;
 
 /**
- * ${comments}
  *
  * @author ${author}
  * @date ${datetime}
  */
+@Tag(name = "${comments}")
 @RestController
 @RequestMapping("/${pathName}")
 public class ${className}Controller {
@@ -61,6 +62,7 @@ public class ${className}Controller {
 
     @GetMapping("/delete/{id}")
     @RequiresPermissions(PermissionConstants.${permissionPrefix}_DELETE)
+    @Operation(summary = "删除${comments}")
     public void delete(@PathVariable String id){
 		${classname}Service.delete(id);
     }

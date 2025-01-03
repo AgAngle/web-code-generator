@@ -22,7 +22,7 @@ import ${package}.${moduleName}.domain.${className};
 public class ${className}Service {
 
     @Resource
-    private BaseMapper<${className}> ${className}Mapper;
+    private BaseMapper<${className}> ${classname}Mapper;
 
     @Resource
     private Ext${className}Mapper ext${className}Mapper;
@@ -35,7 +35,7 @@ public class ${className}Service {
 
 
     public ${className}GetResponse get(String id) {
-        ${className} ${classname} = ${className}Mapper.selectByPrimaryKey(id);
+        ${className} ${classname} = ${classname}Mapper.selectByPrimaryKey(id);
         ${className}GetResponse ${classname}GetResponse = BeanUtils.copyBean(new ${className}GetResponse(), ${classname});
         // do something...
         return ${classname}GetResponse;
@@ -47,7 +47,7 @@ public class ${className}Service {
         ${classname}.setUpdateTime(System.currentTimeMillis());
         ${classname}.setUpdateUser(userId);
         ${classname}.setCreateUser(userId);
-        ${className}Mapper.insert(${classname});
+        ${classname}Mapper.insert(${classname});
         return ${classname};
     }
 
@@ -55,11 +55,11 @@ public class ${className}Service {
         ${className} ${classname} = BeanUtils.copyBean(new ${className}(), request);
         ${classname}.setUpdateTime(System.currentTimeMillis());
         ${classname}.setUpdateUser(userId);
-        ${className}Mapper.update(${classname});
-        return ${className}Mapper.selectByPrimaryKey(${classname}.getId());
+        ${classname}Mapper.update(${classname});
+        return ${classname}Mapper.selectByPrimaryKey(${classname}.getId());
     }
 
     public void delete(String id) {
-        ${className}Mapper.deleteByPrimaryKey(id);
+        ${classname}Mapper.deleteByPrimaryKey(id);
     }
 }
