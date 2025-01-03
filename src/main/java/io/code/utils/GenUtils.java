@@ -1,10 +1,7 @@
 package io.code.utils;
 
-import io.code.config.MongoManager;
 import io.code.entity.ColumnEntity;
 import io.code.entity.TableEntity;
-import io.code.entity.mongo.MongoDefinition;
-import io.code.entity.mongo.MongoGeneratorEntity;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -45,12 +42,6 @@ public class GenUtils {
         } catch (IOException e) {
             throw new RRException("获取模板文件失败", e);
         }
-    }
-
-    public static List<String> getMongoChildTemplates() {
-        List<String> templates = new ArrayList<String>();
-        templates.add("template/MongoChildrenEntity.java.vm");
-        return templates;
     }
 
     /**
@@ -187,97 +178,6 @@ public class GenUtils {
         map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
         map.put("permissionPrefix", permissionPrefix);
         return new VelocityContext(map);
-    }
-
-    private record Result(TableEntity tableEntity, VelocityContext context) {
-    }
-
-    /**
-     * 生成mongo其他实体类的代码
-     */
-    public static void generatorMongoCode(List<String> tableNames) {
-        for (String tableName : tableNames) {
-            MongoDefinition info = MongoManager.getInfo(tableName);
-            List<MongoGeneratorEntity> childrenInfo = info.getChildrenInfo(tableName);
-            childrenInfo.remove(0);
-            for (MongoGeneratorEntity mongoGeneratorEntity : childrenInfo) {
-                generatorChildrenBeanCode(mongoGeneratorEntity);
-            }
-        }
-    }
-
-    private static void generatorChildrenBeanCode(MongoGeneratorEntity mongoGeneratorEntity) {
-        //配置信息
-        Configuration config = getConfig();
-        boolean hasList = false;
-        //表信息
-        TableEntity tableEntity = mongoGeneratorEntity.toTableEntity();
-        //表名转换成Java类名
-        String className = tableToJava(tableEntity.getTableName(), config.getStringArray("tablePrefix"));
-        tableEntity.setClassName(className);
-        tableEntity.setClassname(StringUtils.uncapitalize(className));
-        //列信息
-        List<ColumnEntity> columsList = new ArrayList<>();
-        for (Map<String, String> column : mongoGeneratorEntity.getColumns()) {
-            ColumnEntity columnEntity = new ColumnEntity();
-            String columnName = column.get("columnName");
-            if (columnName.contains(".")) {
-                columnName = columnName.substring(columnName.lastIndexOf(".") + 1);
-            }
-            columnEntity.setColumnName(columnName);
-            columnEntity.setDataType(column.get("dataType"));
-            columnEntity.setExtra(column.get("extra"));
-
-            //列名转换成Java属性名
-            String attrName = columnToJava(columnEntity.getColumnName());
-            columnEntity.setAttrName(attrName);
-            columnEntity.setAttrname(StringUtils.uncapitalize(attrName));
-
-            //列的数据类型，转换成Java类型
-            String attrType = config.getString(columnEntity.getDataType(), columnToJava(columnEntity.getDataType()));
-            columnEntity.setAttrType(attrType);
-
-            if (!hasList && "array".equals(columnEntity.getExtra())) {
-                hasList = true;
-            }
-            columsList.add(columnEntity);
-        }
-        tableEntity.setColumns(columsList);
-
-        //设置velocity资源加载器
-        Properties prop = new Properties();
-        prop.put("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-        Velocity.init(prop);
-        String mainPath = config.getString("mainPath");
-        mainPath = StringUtils.isBlank(mainPath) ? "io.renren" : mainPath;
-        String permissionPrefix = camelToSnake((config.getString("moduleName") + "_" + tableEntity.getClassname()).toUpperCase());
-        //封装模板数据
-        Map<String, Object> map = new HashMap<>();
-        map.put("tableName", tableEntity.getTableName());
-        map.put("comments", tableEntity.getComments());
-        map.put("pk", tableEntity.getPk());
-        map.put("className", tableEntity.getClassName());
-        map.put("classname", tableEntity.getClassname());
-        map.put("pathName", tableEntity.getClassname().toLowerCase());
-        map.put("columns", tableEntity.getColumns());
-        map.put("hasList", hasList);
-        map.put("mainPath", mainPath);
-        map.put("package", config.getString("package"));
-        map.put("moduleName", config.getString("moduleName"));
-        map.put("author", config.getString("author"));
-        map.put("email", config.getString("email"));
-        map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
-        map.put("permissionPrefix", permissionPrefix);
-        VelocityContext context = new VelocityContext(map);
-
-        //获取模板列表
-        List<String> templates = getMongoChildTemplates();
-        for (String template : templates) {
-            //渲染模板
-            StringWriter sw = new StringWriter();
-            Template tpl = Velocity.getTemplate(template, "UTF-8");
-            tpl.merge(context, sw);
-        }
     }
 
     public static String camelToSnake(String camelCase) {

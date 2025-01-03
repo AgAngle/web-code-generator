@@ -10,10 +10,7 @@ package io.code.service;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import io.code.config.MongoManager;
 import io.code.dao.GeneratorDao;
-import io.code.dao.MongoDBGeneratorDao;
-import io.code.factory.MongoDBCollectionFactory;
 import io.code.utils.GenUtils;
 import io.code.utils.PageUtils;
 import io.code.utils.Query;
@@ -41,9 +38,6 @@ public class SysGeneratorService {
         Page<?> page = PageHelper.startPage(query.getPage(), query.getLimit());
         List<Map<String, Object>> list = generatorDao.queryList(query);
         int total = (int) page.getTotal();
-        if (generatorDao instanceof MongoDBGeneratorDao) {
-            total = MongoDBCollectionFactory.getCollectionTotal(query);
-        }
         return new PageUtils(list, total, query.getLimit(), query.getPage());
     }
 
@@ -70,9 +64,6 @@ public class SysGeneratorService {
             List<Map<String, String>> columns = queryColumns(tableName);
             //生成代码
             GenUtils.generatorCode(table, columns);
-        }
-        if (MongoManager.isMongo()) {
-            GenUtils.generatorMongoCode(tableNames);
         }
     }
 }
