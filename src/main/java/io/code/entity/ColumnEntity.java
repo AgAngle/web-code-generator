@@ -23,7 +23,26 @@ public class ColumnEntity {
     private String attrType;
     //auto_increment
     private String extra;
-    
+
+	private Long length;
+	private String isNullable;
+
+	public String getIsNullable() {
+		return isNullable;
+	}
+
+	public void setIsNullable(String isNullable) {
+		this.isNullable = isNullable;
+	}
+
+	public void setLength(Long length) {
+		this.length = length;
+	}
+
+	public Long getLength() {
+		return length;
+	}
+
 	public String getColumnName() {
 		return columnName;
 	}
