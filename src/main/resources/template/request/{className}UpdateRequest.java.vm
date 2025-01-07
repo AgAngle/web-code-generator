@@ -24,7 +24,7 @@ public class ${className}UpdateRequest {
     @NotBlank
 #end
 #if($column.attrType.equals("String"))
-    @Max(value = $column.length)
+    @Size(max = $column.length)
 #end
     @Schema(description = "$column.comments")
     private $column.attrType $column.attrname;

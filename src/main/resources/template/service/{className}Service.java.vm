@@ -17,7 +17,7 @@ import ${package}.${moduleName}.domain.${className};
  * @author ${author}
  * @date ${datetime}
  */
-@Service("${classname}Service")
+@Service
 @Transactional(rollbackFor = Exception.class)
 public class ${className}Service {
 

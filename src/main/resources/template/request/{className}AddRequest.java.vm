@@ -21,7 +21,7 @@ public class ${className}AddRequest {
 || $column.attrname.equals("createTime") || $column.attrname.equals("updateTime")
 || $column.attrname.equals("internal") || $column.attrname.equals("id")))
 #if($column.attrType.equals("String"))
-    @Max(value = $column.length)
+    @Size(max = $column.length)
 #if($column.isNullable.equals("NO"))
     @NotBlank
 #end
