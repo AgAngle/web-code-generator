@@ -1,0 +1,122 @@
+package ${package}.${moduleName}.controller;
+
+import ${mainPath}.common.constants.PermissionConstants;
+import ${mainPath}.common.pager.Pager;
+import ${package}.base.BaseTest;
+import ${package}.${moduleName}.domain.${className};
+import ${package}.${moduleName}.dto.request.${className}AddRequest;
+import ${package}.${moduleName}.dto.request.${className}PageRequest;
+import ${package}.${moduleName}.dto.request.${className}UpdateRequest;
+import ${package}.${moduleName}.dto.response.${className}ListResponse;
+import ${mainPath}.mybatis.BaseMapper;
+import jakarta.annotation.Resource;
+import org.apache.commons.collections4.CollectionUtils;
+import org.junit.jupiter.api.*;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.List;
+
+@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class ${className}ControllerTests extends BaseTest {
+    private static final String BASE_PATH = "/${class_name}/";
+
+    /**
+     * 记录创建的角色
+     */
+    private static ${className} add${className};
+
+    @Resource
+    private BaseMapper<${className}> ${classname}Mapper;
+
+    @Override
+    protected String getBasePath() {
+        return BASE_PATH;
+    }
+
+    @Test
+    @Order(0)
+    void testPageEmpty() throws Exception {
+        ${className}PageRequest request = new ${className}PageRequest();
+        request.setCurrent(1);
+        request.setPageSize(10);
+
+        MvcResult mvcResult = this.requestPostWithOk(DEFAULT_PAGE, request)
+                .andReturn();
+        Pager<List<${className}ListResponse>> pageResult = getPageResult(mvcResult, ${className}ListResponse.class);
+        List<${className}ListResponse> ${classname}List = pageResult.getList();
+        Assertions.assertTrue(CollectionUtils.isEmpty(${classname}List));
+
+        // 校验权限
+        requestPostPermissionTest(PermissionConstants.SYSTEM_ROLE_READ, DEFAULT_PAGE, request);
+    }
+
+    @Test
+    @Order(1)
+    void testAdd() throws Exception {
+        // 请求成功
+        ${className}AddRequest request = new ${className}AddRequest();
+        request.setName("test");
+        request.setOrganizationId(DEFAULT_ORGANIZATION_ID);
+        MvcResult mvcResult = this.requestPostWithOkAndReturn(DEFAULT_ADD, request);
+        ${className} resultData = getResultData(mvcResult, ${className}.class);
+        ${className} ${classname} = ${classname}Mapper.selectByPrimaryKey(resultData.getId());
+
+        // 校验请求成功数据
+        this.add${className} = ${classname};
+        Assertions.assertEquals(request.getName(), ${classname}.getName());
+
+        // 校验权限
+        requestPostPermissionTest(PermissionConstants.SYSTEM_ROLE_ADD, DEFAULT_ADD, request);
+    }
+
+    @Test
+    @Order(2)
+    void testUpdate() throws Exception {
+        // 请求成功
+        ${className}UpdateRequest request = new ${className}UpdateRequest();
+        request.setId(add${className}.getId());
+        request.setName("test update");
+        this.requestPostWithOk(DEFAULT_UPDATE, request);
+        // 校验请求成功数据
+        ${className} user${className}Result = ${classname}Mapper.selectByPrimaryKey(request.getId());
+        Assertions.assertEquals(request.getName(), user${className}Result.getName());
+
+        // 不修改信息
+        ${className}UpdateRequest emptyRequest = new ${className}UpdateRequest();
+        emptyRequest.setId(add${className}.getId());
+        this.requestPostWithOk(DEFAULT_UPDATE, emptyRequest);
+
+        // 校验权限
+        requestPostPermissionTest(PermissionConstants.SYSTEM_ROLE_UPDATE, DEFAULT_UPDATE, request);
+    }
+
+    @Test
+    @Order(3)
+    void testPage() throws Exception {
+        ${className}PageRequest request = new ${className}PageRequest();
+        request.setCurrent(1);
+        request.setPageSize(10);
+
+        MvcResult mvcResult = this.requestPostWithOk(DEFAULT_PAGE, request)
+                .andReturn();
+        Pager<List<${className}ListResponse>> pageResult = getPageResult(mvcResult, ${className}ListResponse.class);
+        List<${className}ListResponse> ${classname}List = pageResult.getList();
+        // todo
+        
+        // 校验权限
+        requestPostPermissionTest(PermissionConstants.SYSTEM_ROLE_READ, DEFAULT_PAGE, request);
+    }
+
+    @Test
+    @Order(10)
+    void delete() throws Exception {
+        this.requestGetWithOk(DEFAULT_DELETE, add${className}.getId());
+        // todo
+        // 校验权限
+        requestGetPermissionTest(PermissionConstants.${permissionPrefix}_DELETE, DEFAULT_DELETE, add${className}.getId());
+    }
+}

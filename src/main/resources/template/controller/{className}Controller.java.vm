@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Tag(name = "${comments}")
 @RestController
-@RequestMapping("/${pathName}")
+@RequestMapping("/${class_name}")
 public class ${className}Controller {
     @Resource
     private ${className}Service ${classname}Service;
