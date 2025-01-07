@@ -160,6 +160,10 @@ public class GenUtils {
 
         //封装模板数据
         Map<String, Object> map = new HashMap<>();
+
+        // 添加配置文件变量
+        config.getKeys().forEachRemaining((key) -> map.put(key, config.getString(key)));
+
         map.put("tableName", tableEntity.getTableName());
         map.put("comments", tableEntity.getComments());
         map.put("pk", tableEntity.getPk());
@@ -171,10 +175,6 @@ public class GenUtils {
         map.put("hasBigDecimal", hasBigDecimal);
         map.put("hasList", hasList);
         map.put("mainPath", mainPath);
-        map.put("package", config.getString("package"));
-        map.put("moduleName", config.getString("moduleName"));
-        map.put("author", config.getString("author"));
-        map.put("email", config.getString("email"));
         map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
         map.put("permissionPrefix", permissionPrefix);
         return new VelocityContext(map);
