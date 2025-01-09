@@ -60,7 +60,6 @@ class ${className}ControllerTests extends BaseTest {
         // 请求成功
         ${className}AddRequest request = new ${className}AddRequest();
         request.setName("test");
-        request.setOrganizationId(DEFAULT_ORGANIZATION_ID);
         MvcResult mvcResult = this.requestPostWithOkAndReturn(DEFAULT_ADD, request);
         ${className} resultData = getResultData(mvcResult, ${className}.class);
         ${className} ${classname} = ${classname}Mapper.selectByPrimaryKey(resultData.getId());

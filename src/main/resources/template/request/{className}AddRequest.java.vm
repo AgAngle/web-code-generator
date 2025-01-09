@@ -19,7 +19,7 @@ public class ${className}AddRequest {
 
 #if(!($column.attrname.equals("createUser") || $column.attrname.equals("updateUser")
 || $column.attrname.equals("createTime") || $column.attrname.equals("updateTime")
-|| $column.attrname.equals("internal") || $column.attrname.equals("id")))
+|| $column.attrname.equals("internal") || $column.attrname.equals("id") || $column.attrname.equals("organizationId")))
 #if($column.attrType.equals("String"))
     @Size(max = $column.length)
 #if($column.isNullable.equals("NO"))
