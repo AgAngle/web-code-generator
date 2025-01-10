@@ -2,7 +2,9 @@ package ${package}.${moduleName}.dto.response;
 
 import lombok.Data;
 import ${package}.${moduleName}.domain.${className};
-
+#if($extendBaseModel.equals("true"))
+import ${package}.${moduleName}.domain.${className};
+#end
 #if(${hasBigDecimal})
 import java.math.BigDecimal;
 #end
@@ -14,5 +16,11 @@ import java.math.BigDecimal;
  */
 @Data
 public class ${className}GetResponse extends ${className} {
+#if($extendBaseModel.equals("true"))
+    @Schema(description = "创建人名称")
+    private String createUserName;
 
+    @Schema(description = "更新人名称")
+    private String updateUserName;
+#end
 }

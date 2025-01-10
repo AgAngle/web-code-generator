@@ -27,10 +27,20 @@ public class ${className}Service {
     @Resource
     private Ext${className}Mapper ext${className}Mapper;
 
+#if($extendBaseModel.equals("true"))
+    @Resource
+    private BaseService baseService;
+#end
+
     public List<${className}ListResponse> list(${className}PageRequest request) {
         List<${className}ListResponse> list = ext${className}Mapper.list(request);
         // do something...
+
+#if($extendBaseModel.equals("true"))
+        return baseService.setCreateAndUpdateUserName(roleListResponseList);
+#else
         return list;
+#end
     }
 
 
@@ -38,7 +48,11 @@ public class ${className}Service {
         ${className} ${classname} = ${classname}Mapper.selectByPrimaryKey(id);
         ${className}GetResponse ${classname}GetResponse = BeanUtils.copyBean(new ${className}GetResponse(), ${classname});
         // do something...
+#if($extendBaseModel.equals("true"))
+        return baseService.setCreateAndUpdateUserName(${classname}GetResponse);
+#else
         return ${classname}GetResponse;
+#end
     }
 
     public ${className} add(${className}AddRequest request, String userId) {
