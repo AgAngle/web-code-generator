@@ -24,11 +24,12 @@ public class ${className}AddRequest {
     @Size(max = $column.length)
 #if($column.isNullable.equals("NO"))
     @NotBlank
+    @Schema(description = "$column.comments", requiredMode = Schema.RequiredMode.REQUIRED)
 #end
 #elseif($column.isNullable.equals("NO"))
     @NotNull
-#end
     @Schema(description = "$column.comments")
+#end
     private $column.attrType $column.attrname;
 #end
 #end
