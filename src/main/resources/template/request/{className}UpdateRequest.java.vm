@@ -22,11 +22,13 @@ public class ${className}UpdateRequest {
 || $column.attrname.equals("organizationId") || $column.attrname.equals("internal")))
 #if($column.columnName.equals("id"))
     @NotBlank
-#end
+    @Schema(description = "$column.comments", requiredMode = Schema.RequiredMode.REQUIRED)
 #if($column.attrType.equals("String"))
     @Size(max = $column.length)
 #end
+#else
     @Schema(description = "$column.comments")
+#end
     private $column.attrType $column.attrname;
 #end
 #end
