@@ -8,4 +8,19 @@
 
     </select>
 
+    <select id="checkAddExist" resultType="java.lang.Boolean">
+        SELECT COUNT(1)
+        FROM ${tableName}
+        WHERE name = #{${classname}.name} and organization_id = #{${classname}.organizationId} limit 1
+    </select>
+
+    <select id="checkUpdateExist" resultType="java.lang.Boolean">
+        SELECT COUNT(1)
+        FROM ${tableName}
+        WHERE name = #{${classname}.name}
+          and organization_id = (
+            select organization_id from ${tableName} where id = #{${classname}.id}
+          )
+          and id != #{${classname}.id} limit 1
+    </select>
 </mapper>

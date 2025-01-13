@@ -61,6 +61,8 @@ public class ${className}Service {
         ${classname}.setUpdateTime(System.currentTimeMillis());
         ${classname}.setUpdateUser(userId);
         ${classname}.setCreateUser(userId);
+        // 校验名称重复
+        checkAddExist(${classname});
         ${classname}Mapper.insert(${classname});
         return ${classname};
     }
@@ -69,8 +71,22 @@ public class ${className}Service {
         ${className} ${classname} = BeanUtils.copyBean(new ${className}(), request);
         ${classname}.setUpdateTime(System.currentTimeMillis());
         ${classname}.setUpdateUser(userId);
+        // 校验名称重复
+        checkUpdateExist(${classname});
         ${classname}Mapper.update(${classname});
         return ${classname}Mapper.selectByPrimaryKey(${classname}.getId());
+    }
+
+    private void checkAddExist(${className} ${classname}) {
+        if (ext${className}Mapper.checkAddExist(${classname})) {
+            throw new GenericException(${CLASS_NAME}_EXIST);
+        }
+    }
+
+    private void checkUpdateExist(${className} ${classname}) {
+        if (ext${className}Mapper.checkUpdateExist(${classname})) {
+            throw new GenericException(${CLASS_NAME}_EXIST);
+        }
     }
 
     public void delete(String id) {

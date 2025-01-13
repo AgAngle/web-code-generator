@@ -14,4 +14,8 @@ import java.util.List;
 public interface Ext${className}Mapper {
 
     List<${className}ListResponse> list(@Param("request") ${className}PageRequest request);
+
+    boolean checkAddExist(@Param("${classname}") ${className} ${classname});
+
+    boolean checkUpdateExist(@Param("${classname}") ${className} ${className});
 }

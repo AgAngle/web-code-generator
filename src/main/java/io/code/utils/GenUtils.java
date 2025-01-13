@@ -170,6 +170,7 @@ public class GenUtils {
         map.put("className", tableEntity.getClassName());
         map.put("classname", tableEntity.getClassname());
         map.put("class_name", class_name);
+        map.put("CLASS_NAME", class_name.toUpperCase());
         map.put("pathName", tableEntity.getClassname().toLowerCase());
         map.put("columns", tableEntity.getColumns());
         map.put("hasBigDecimal", hasBigDecimal);

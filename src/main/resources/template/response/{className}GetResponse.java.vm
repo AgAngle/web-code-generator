@@ -1,6 +1,7 @@
 package ${package}.${moduleName}.dto.response;
 
 import lombok.Data;
+import io.swagger.v3.oas.annotations.media.Schema;
 import ${package}.${moduleName}.domain.${className};
 #if($extendBaseModel.equals("true"))
 import ${package}.${moduleName}.domain.${className};
