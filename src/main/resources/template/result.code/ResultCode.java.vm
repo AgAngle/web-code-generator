@@ -9,7 +9,7 @@ import io.cordys.common.exception.IResultCode;
  */
 public enum ResultCode implements IResultCode {
 
-    ROLE_EXIST(xxx, "${class_name}.exist"),
+    ${CLASS_NAME}_EXIST(xxx, "${class_name}.exist"),
     ;
 
 

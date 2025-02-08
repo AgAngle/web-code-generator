@@ -5,7 +5,9 @@
 
 
     <select id="list" resultType="${package}.${moduleName}.dto.response.${className}ListResponse">
-
+        SELECT *
+        FROM ${tableName}
+        WHERE organization_id = #{orgId}
     </select>
 
     <select id="checkAddExist" resultType="java.lang.Boolean">

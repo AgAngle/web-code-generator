@@ -6,13 +6,13 @@
       "id": "${permissionPrefix}:READ"
     },
     {
-      "id": "${permissionPrefix}:READ+ADD"
+      "id": "${permissionPrefix}:ADD"
     },
     {
-      "id": "${permissionPrefix}:READ+UPDATE"
+      "id": "${permissionPrefix}:UPDATE"
     },
     {
-      "id": "${permissionPrefix}:READ+DELETE"
+      "id": "${permissionPrefix}:DELETE"
     }
   ]
 }

@@ -9,6 +9,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.annotation.Resource;
 import io.cordys.common.constants.PermissionConstants;
+import io.cordys.context.OrganizationContext;
+
 import io.cordys.common.pager.Pager;
 import io.cordys.security.SessionUtils;
 import ${package}.${moduleName}.domain.${className};
@@ -36,7 +38,7 @@ public class ${className}Controller {
     @Operation(summary = "${comments}列表")
     public Pager<List<${className}ListResponse>> list(@Validated @RequestBody ${className}PageRequest request){
         Page<Object> page = PageHelper.startPage(request.getCurrent(), request.getPageSize());
-        return PageUtils.setPageInfo(page, ${classname}Service.list(request));
+        return PageUtils.setPageInfo(page, ${classname}Service.list(request, OrganizationContext.getOrganizationId()));
     }
 
     @GetMapping("/get/{id}")

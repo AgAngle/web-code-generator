@@ -24,9 +24,6 @@ import java.util.List;
 class ${className}ControllerTests extends BaseTest {
     private static final String BASE_PATH = "/${class_name}/";
 
-    /**
-     * 记录创建的角色
-     */
     private static ${className} add${className};
 
     @Resource
@@ -51,7 +48,7 @@ class ${className}ControllerTests extends BaseTest {
         Assertions.assertTrue(CollectionUtils.isEmpty(${classname}List));
 
         // 校验权限
-        requestPostPermissionTest(PermissionConstants.SYSTEM_ROLE_READ, DEFAULT_PAGE, request);
+        requestPostPermissionTest(PermissionConstants.${permissionPrefix}_READ, DEFAULT_PAGE, request);
     }
 
     @Test
@@ -69,7 +66,7 @@ class ${className}ControllerTests extends BaseTest {
         Assertions.assertEquals(request.getName(), ${classname}.getName());
 
         // 校验权限
-        requestPostPermissionTest(PermissionConstants.SYSTEM_ROLE_ADD, DEFAULT_ADD, request);
+        requestPostPermissionTest(PermissionConstants.${permissionPrefix}_ADD, DEFAULT_ADD, request);
     }
 
     @Test
@@ -90,7 +87,7 @@ class ${className}ControllerTests extends BaseTest {
         this.requestPostWithOk(DEFAULT_UPDATE, emptyRequest);
 
         // 校验权限
-        requestPostPermissionTest(PermissionConstants.SYSTEM_ROLE_UPDATE, DEFAULT_UPDATE, request);
+        requestPostPermissionTest(PermissionConstants.${permissionPrefix}_UPDATE, DEFAULT_UPDATE, request);
     }
 
     @Test
@@ -107,7 +104,7 @@ class ${className}ControllerTests extends BaseTest {
         // todo
         
         // 校验权限
-        requestPostPermissionTest(PermissionConstants.SYSTEM_ROLE_READ, DEFAULT_PAGE, request);
+        requestPostPermissionTest(PermissionConstants.${permissionPrefix}_READ, DEFAULT_PAGE, request);
     }
 
     @Test

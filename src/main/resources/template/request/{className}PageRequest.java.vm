@@ -1,6 +1,7 @@
 package ${package}.${moduleName}.dto.request;
 
 import lombok.Data;
+import io.cordys.common.pager.condition.BasePageRequest;
 
 #if(${hasBigDecimal})
 import java.math.BigDecimal;

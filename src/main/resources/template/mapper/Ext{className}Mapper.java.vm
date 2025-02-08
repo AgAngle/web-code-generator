@@ -3,6 +3,7 @@ package ${package}.${moduleName}.mapper;
 import ${package}.${moduleName}.dto.request.*;
 import ${package}.${moduleName}.dto.response.*;
 import org.apache.ibatis.annotations.Param;
+import ${package}.${moduleName}.domain.${className};
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface Ext${className}Mapper {
 
-    List<${className}ListResponse> list(@Param("request") ${className}PageRequest request);
+    List<${className}ListResponse> list(@Param("request") ${className}PageRequest request, @Param("orgId") String orgId);
 
     boolean checkAddExist(@Param("${classname}") ${className} ${classname});
 

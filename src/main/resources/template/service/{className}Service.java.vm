@@ -6,7 +6,9 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-
+import io.cordys.common.exception.GenericException;
+import io.cordys.common.uid.IDGenerator;
+import io.cordys.common.service.BaseService;
 import ${package}.${moduleName}.dto.request.*;
 import ${package}.${moduleName}.dto.response.*;
 import ${package}.${moduleName}.mapper.Ext${className}Mapper;
@@ -32,12 +34,12 @@ public class ${className}Service {
     private BaseService baseService;
 #end
 
-    public List<${className}ListResponse> list(${className}PageRequest request) {
-        List<${className}ListResponse> list = ext${className}Mapper.list(request);
+    public List<${className}ListResponse> list(${className}PageRequest request, String orgId) {
+        List<${className}ListResponse> list = ext${className}Mapper.list(request, orgId);
         // do something...
 
 #if($extendBaseModel.equals("true"))
-        return baseService.setCreateAndUpdateUserName(roleListResponseList);
+        return baseService.setCreateAndUpdateUserName(list);
 #else
         return list;
 #end
@@ -55,12 +57,14 @@ public class ${className}Service {
 #end
     }
 
-    public ${className} add(${className}AddRequest request, String userId) {
+    public ${className} add(${className}AddRequest request, String userId, String orgId) {
         ${className} ${classname} = BeanUtils.copyBean(new ${className}(), request);
         ${classname}.setCreateTime(System.currentTimeMillis());
         ${classname}.setUpdateTime(System.currentTimeMillis());
         ${classname}.setUpdateUser(userId);
         ${classname}.setCreateUser(userId);
+        ${classname}.setOrganizationId(orgId);
+        ${classname}.setId(IDGenerator.nextStr());
         // 校验名称重复
         checkAddExist(${classname});
         ${classname}Mapper.insert(${classname});
@@ -71,6 +75,7 @@ public class ${className}Service {
         ${className} ${classname} = BeanUtils.copyBean(new ${className}(), request);
         ${classname}.setUpdateTime(System.currentTimeMillis());
         ${classname}.setUpdateUser(userId);
+        ${classname}.setId(IDGenerator.nextStr());
         // 校验名称重复
         checkUpdateExist(${classname});
         ${classname}Mapper.update(${classname});
