@@ -75,7 +75,6 @@ public class ${className}Service {
         ${className} ${classname} = BeanUtils.copyBean(new ${className}(), request);
         ${classname}.setUpdateTime(System.currentTimeMillis());
         ${classname}.setUpdateUser(userId);
-        ${classname}.setId(IDGenerator.nextStr());
         // 校验名称重复
         checkUpdateExist(${classname});
         ${classname}Mapper.update(${classname});
