@@ -41,8 +41,7 @@ class ${className}ControllerTests extends BaseTest {
         request.setCurrent(1);
         request.setPageSize(10);
 
-        MvcResult mvcResult = this.requestPostWithOk(DEFAULT_PAGE, request)
-                .andReturn();
+        MvcResult mvcResult = this.requestPostWithOkAndReturn(DEFAULT_PAGE, request);
         Pager<List<${className}ListResponse>> pageResult = getPageResult(mvcResult, ${className}ListResponse.class);
         List<${className}ListResponse> ${classname}List = pageResult.getList();
         Assertions.assertTrue(CollectionUtils.isEmpty(${classname}List));
@@ -97,8 +96,7 @@ class ${className}ControllerTests extends BaseTest {
         request.setCurrent(1);
         request.setPageSize(10);
 
-        MvcResult mvcResult = this.requestPostWithOk(DEFAULT_PAGE, request)
-                .andReturn();
+        MvcResult mvcResult = this.requestPostWithOkAndReturn(DEFAULT_PAGE, request);
         Pager<List<${className}ListResponse>> pageResult = getPageResult(mvcResult, ${className}ListResponse.class);
         List<${className}ListResponse> ${classname}List = pageResult.getList();
         // todo
