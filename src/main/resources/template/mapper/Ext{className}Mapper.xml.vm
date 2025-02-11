@@ -5,24 +5,24 @@
 
 
     <select id="list" resultType="${package}.${moduleName}.dto.response.${className}ListResponse">
-        SELECT *
-        FROM ${tableName}
-        WHERE organization_id = #{orgId}
+        select *
+        from ${tableName}
+        where organization_id = #{orgId}
     </select>
 
     <select id="checkAddExist" resultType="java.lang.Boolean">
-        SELECT COUNT(1)
-        FROM ${tableName}
-        WHERE name = #{${classname}.name} AND organization_id = #{${classname}.organizationId} limit 1
+        select COUNT(1)
+        from ${tableName}
+        where name = #{${classname}.name} and organization_id = #{${classname}.organizationId} limit 1
     </select>
 
     <select id="checkUpdateExist" resultType="java.lang.Boolean">
-        SELECT COUNT(1)
-        FROM ${tableName}
-        WHERE name = #{${classname}.name}
-          AND organization_id = (
-            SELECT organization_id FROM ${tableName} WHERE id = #{${classname}.id}
-          )
-          AND id != #{${classname}.id} limit 1
+        select COUNT(1)
+        from ${tableName}
+        where name = #{${classname}.name}
+        and organization_id = (
+            select organization_id from ${tableName} where id = #{${classname}.id}
+        )
+        and id != #{${classname}.id} limit 1
     </select>
 </mapper>
