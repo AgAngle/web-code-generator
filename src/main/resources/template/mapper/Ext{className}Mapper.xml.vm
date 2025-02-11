@@ -11,13 +11,13 @@
     </select>
 
     <select id="checkAddExist" resultType="java.lang.Boolean">
-        select COUNT(1)
+        select count(1)
         from ${tableName}
         where name = #{${classname}.name} and organization_id = #{${classname}.organizationId} limit 1
     </select>
 
     <select id="checkUpdateExist" resultType="java.lang.Boolean">
-        select COUNT(1)
+        select count(1)
         from ${tableName}
         where name = #{${classname}.name}
         and organization_id = (
