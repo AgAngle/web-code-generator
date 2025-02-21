@@ -36,7 +36,7 @@ public class ${className}Controller {
     @PostMapping("/page")
     @RequiresPermissions(PermissionConstants.${permissionPrefix}_READ)
     @Operation(summary = "${comments}列表")
-    public Pager<List<${className}ListResponse>> list(@Validated @RequestBody ${className}PageRequest request){
+    public Pager<List<${className}ListResponse>> list(@Validated @RequestBody ${className}PageRequest request) {
         Page<Object> page = PageHelper.startPage(request.getCurrent(), request.getPageSize());
         return PageUtils.setPageInfo(page, ${classname}Service.list(request, OrganizationContext.getOrganizationId()));
     }
@@ -51,21 +51,21 @@ public class ${className}Controller {
     @PostMapping("/add")
     @RequiresPermissions(PermissionConstants.${permissionPrefix}_ADD)
     @Operation(summary = "添加${comments}")
-    public ${className} add(@Validated @RequestBody ${className}AddRequest request){
+    public ${className} add(@Validated @RequestBody ${className}AddRequest request) {
 		return ${classname}Service.add(request, SessionUtils.getUserId());
     }
 
     @PostMapping("/update")
     @RequiresPermissions(PermissionConstants.${permissionPrefix}_UPDATE)
     @Operation(summary = "更新${comments}")
-    public ${className} update(@Validated @RequestBody ${className}UpdateRequest request){
+    public ${className} update(@Validated @RequestBody ${className}UpdateRequest request) {
         return ${classname}Service.update(request, SessionUtils.getUserId());
     }
 
     @GetMapping("/delete/{id}")
     @RequiresPermissions(PermissionConstants.${permissionPrefix}_DELETE)
     @Operation(summary = "删除${comments}")
-    public void delete(@PathVariable String id){
+    public void delete(@PathVariable String id) {
 		${classname}Service.delete(id);
     }
 }

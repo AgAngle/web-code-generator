@@ -91,6 +91,21 @@ class ${className}ControllerTests extends BaseTest {
 
     @Test
     @Order(3)
+    void testGet() throws Exception {
+        MvcResult mvcResult = this.requestGetWithOkAndReturn(DEFAULT_GET, add${className}.getId());
+        ${className}GetResponse getResponse = getResultData(mvcResult, ${className}GetResponse.class);
+
+        // 校验请求成功数据
+        ${className} ${classname} = customerMapper.selectByPrimaryKey(add${className}.getId());
+        ${className} response${className} = BeanUtils.copyBean(new ${className}(), getResponse);
+        Assertions.assertEquals(response${className}, ${classname});
+
+        // 校验权限
+        requestGetPermissionTest(PermissionConstants.${permissionPrefix}_READ, DEFAULT_GET, add${className}.getId());
+    }
+
+    @Test
+    @Order(4)
     void testPage() throws Exception {
         ${className}PageRequest request = new ${className}PageRequest();
         request.setCurrent(1);
