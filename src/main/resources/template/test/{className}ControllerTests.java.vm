@@ -8,10 +8,12 @@ import ${package}.${moduleName}.dto.request.${className}AddRequest;
 import ${package}.${moduleName}.dto.request.${className}PageRequest;
 import ${package}.${moduleName}.dto.request.${className}UpdateRequest;
 import ${package}.${moduleName}.dto.response.${className}ListResponse;
+import ${package}.${moduleName}.dto.response.${className}GetResponse;
 import ${mainPath}.mybatis.BaseMapper;
 import jakarta.annotation.Resource;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.*;
+import io.cordys.common.util.BeanUtils;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MvcResult;
@@ -96,7 +98,7 @@ class ${className}ControllerTests extends BaseTest {
         ${className}GetResponse getResponse = getResultData(mvcResult, ${className}GetResponse.class);
 
         // 校验请求成功数据
-        ${className} ${classname} = customerMapper.selectByPrimaryKey(add${className}.getId());
+        ${className} ${classname} = ${classname}Mapper.selectByPrimaryKey(add${className}.getId());
         ${className} response${className} = BeanUtils.copyBean(new ${className}(), getResponse);
         Assertions.assertEquals(response${className}, ${classname});
 

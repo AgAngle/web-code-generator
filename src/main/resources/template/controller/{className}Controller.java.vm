@@ -52,7 +52,7 @@ public class ${className}Controller {
     @RequiresPermissions(PermissionConstants.${permissionPrefix}_ADD)
     @Operation(summary = "添加${comments}")
     public ${className} add(@Validated @RequestBody ${className}AddRequest request) {
-		return ${classname}Service.add(request, SessionUtils.getUserId());
+		return ${classname}Service.add(request, SessionUtils.getUserId(), OrganizationContext.getOrganizationId());
     }
 
     @PostMapping("/update")
