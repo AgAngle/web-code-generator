@@ -1,7 +1,11 @@
 package ${package}.${moduleName}.domain;
 
 import jakarta.persistence.Table;
+
+#if($extendBaseModel.equals("true"))
 import io.cordys.common.domain.BaseModel;
+#end
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
