@@ -8,11 +8,11 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.annotation.Resource;
-import io.cordys.common.constants.PermissionConstants;
-import io.cordys.context.OrganizationContext;
+import cn.cordys.common.constants.PermissionConstants;
+import cn.cordys.context.OrganizationContext;
 
-import io.cordys.common.pager.Pager;
-import io.cordys.security.SessionUtils;
+import cn.cordys.common.pager.Pager;
+import cn.cordys.security.SessionUtils;
 import ${package}.${moduleName}.domain.${className};
 import ${package}.${moduleName}.dto.request.*;
 import ${package}.${moduleName}.dto.response.*;

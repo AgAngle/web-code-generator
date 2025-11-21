@@ -1,6 +1,6 @@
 package ${package}.${moduleName}.constants;
 
-import io.cordys.common.exception.IResultCode;
+import cn.cordys.common.exception.IResultCode;
 
 /**
  *

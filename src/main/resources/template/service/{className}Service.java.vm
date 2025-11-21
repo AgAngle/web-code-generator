@@ -1,14 +1,14 @@
 package ${package}.${moduleName}.service;
 
-import io.cordys.common.util.BeanUtils;
-import io.cordys.mybatis.BaseMapper;
+import cn.cordys.common.util.BeanUtils;
+import cn.cordys.mybatis.BaseMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import io.cordys.common.exception.GenericException;
-import io.cordys.common.uid.IDGenerator;
-import io.cordys.common.service.BaseService;
+import cn.cordys.common.exception.GenericException;
+import cn.cordys.common.uid.IDGenerator;
+import cn.cordys.common.service.BaseService;
 import ${package}.${moduleName}.dto.request.*;
 import ${package}.${moduleName}.dto.response.*;
 import ${package}.${moduleName}.mapper.Ext${className}Mapper;
